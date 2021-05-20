@@ -1,19 +1,49 @@
+import { useState } from 'react';
+import Select from 'shared/components/Select';
+
+enum DefaultStatus {
+  ALL = 'all',
+}
+
+enum CommonStatus {
+  CANCEL = 'cancel',
+  PAUSE = 'pause',
+  WAITING = 'waiting',
+  PROCESSING = 'processing',
+  COMPLETED = 'completed',
+}
+
+const CommonStatusView = {
+  [DefaultStatus.ALL]: 'Tất cả',
+  [CommonStatus.CANCEL]: 'Hủy',
+  [CommonStatus.PAUSE]: 'Tạm dừng',
+  [CommonStatus.WAITING]: 'Đang chờ',
+  [CommonStatus.PROCESSING]: 'Đang thực hiện',
+  [CommonStatus.COMPLETED]: 'Hoàn thành',
+};
+
+const commonStatusOptions = () => {
+  return Object.values(CommonStatus).map((status) => ({
+    label: CommonStatusView[status],
+    value: status,
+  }));
+};
+
 function App() {
+  const [status, setStatus] = useState();
+
+  const onChange = (data) => {
+    setStatus(data);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Select
+        value={status}
+        placeholder="Trạng thái"
+        onChange={onChange}
+        loadOptions={commonStatusOptions}
+      />
     </div>
   );
 }

@@ -1,7 +1,5 @@
 import { CloseOutline } from '@styled-icons/evaicons-outline';
 import { ChevronDown } from '@styled-icons/ionicons-solid';
-import { FieldInput } from 'shared/components/Form/Styles';
-import { color, mixin } from 'shared/utils/styles';
 import styled, { css } from 'styled-components';
 
 export const SelectIndicator = styled.div`
@@ -61,7 +59,7 @@ export const SelectValueItem = styled.div<Record<string, any>>`
   ${(props) =>
     props.isMultiple
       ? css`
-          color: ${color.textMedium};
+          color: #243656;
           cursor: pointer;
           background-color: #f7f7f7;
           margin-right: 8px;
@@ -69,8 +67,8 @@ export const SelectValueItem = styled.div<Record<string, any>>`
           border-radius: 4px;
 
           &:hover {
-            background: ${mixin.rgba(color.appColor, 0.1)};
-            color: ${color.appColor};
+            background: rgba(31 211 146 0.1);
+            color: #1fd392;
           }
         `
       : css``}
@@ -106,7 +104,37 @@ export const SelectOptionsContainer = styled.div`
   width: 100%;
   border: 1px solid #ebedf3;
   padding: 10px;
-  background-color: ${color.white};
+  background-color: #fff;
+`;
+
+export const FieldInput = styled.input<Record<string, any>>`
+  height: 40px;
+  width: 100%;
+  padding: 0 7px;
+  border-radius: 3px;
+  border: 1px solid #dfe1e6;
+  color: #172b4d;
+  transition: background 0.1s;
+  font-size: 15px;
+  outline: none;
+  ${(props) => props.hasIcon && 'padding-left: 32px;'}
+  &:hover {
+    background: #ebecf0;
+  }
+  &:focus {
+    background: #fff;
+    border: 1px solid #4c9aff;
+    box-shadow: 0 0 0 1px #4c9aff;
+  }
+  ${(props) =>
+    props.invalid &&
+    css`
+      &,
+      &:focus {
+        border: 1px solid #e13c3c;
+        box-shadow: none;
+      }
+    `}
 `;
 
 export const SelectSearch = styled(FieldInput)`
@@ -143,8 +171,8 @@ export const StyledSelect = styled.div<Record<string, any>>`
     props.showOptions
       ? css`
           ${SelectControl} {
-            border: 1px solid ${color.borderInputFocus};
-            box-shadow: 0 0 0 1px ${color.borderInputFocus};
+            border: 1px solid #4c9aff;
+            box-shadow: 0 0 0 1px #4c9aff;
           }
         `
       : css`

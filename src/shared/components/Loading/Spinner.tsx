@@ -1,7 +1,7 @@
 const defaultProps = {
   className: undefined,
   size: 32,
-  color: '#eee',
+  color: '#4c9aff',
 };
 
 const Spinner = ({ className, size, color }) => (

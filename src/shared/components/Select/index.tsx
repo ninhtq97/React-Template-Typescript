@@ -72,6 +72,7 @@ const Select = forwardRef<any, any>(
       setOptions(newOptions);
     };
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const fetchOptions = useCallback(
       debounce(async (...args: any) => {
         if (loadOptions) {
