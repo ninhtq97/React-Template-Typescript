@@ -1,10 +1,4 @@
-const defaultProps = {
-  className: undefined,
-  size: 32,
-  color: '#4c9aff',
-};
-
-const Spinner = ({ className, size, color }) => (
+const Spinner = ({ className = undefined, size = 32, color = '#4c9aff' }) => (
   <span className={className}>
     <svg
       width={size}
@@ -201,7 +195,5 @@ const Spinner = ({ className, size, color }) => (
     </svg>
   </span>
 );
-
-Spinner.defaultProps = defaultProps;
 
 export default Spinner;

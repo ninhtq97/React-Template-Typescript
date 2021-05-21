@@ -1,5 +1,7 @@
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import Select from 'shared/components/Select';
+import 'shared/styles/font.css';
+import GlobalStyles from 'shared/styles/global';
 
 enum DefaultStatus {
   ALL = 'all',
@@ -37,14 +39,15 @@ function App() {
   };
 
   return (
-    <div className="App">
+    <Fragment>
+      <GlobalStyles />
       <Select
         value={status}
         placeholder="Trạng thái"
         onChange={onChange}
         loadOptions={commonStatusOptions}
       />
-    </div>
+    </Fragment>
   );
 }
 

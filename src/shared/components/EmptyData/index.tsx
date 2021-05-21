@@ -1,4 +1,4 @@
-import { StyledEmptyData } from './Styles';
+import { StyledEmptyData } from './styles';
 
 const EmptyData = () => {
   return <StyledEmptyData>Không có kết quả nào</StyledEmptyData>;

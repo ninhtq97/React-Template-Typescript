@@ -27,18 +27,28 @@ import {
   SelectValue,
   SelectValueItem,
   StyledSelect,
-} from './Styles';
+} from './styles';
 
-const Select = forwardRef<any, any>(
+const initState = {
+  selected: [],
+  showOptions: false,
+  options: [],
+  keyword: '',
+  isLoading: false,
+};
+
+const Select = forwardRef<HTMLDivElement, any>(
   (
     { isMultiple, isDisable, loadOptions, value, onChange, placeholder },
     $ref
   ) => {
-    const [selected, setSelected] = useState<SelectedValue[]>([]);
-    const [showOptions, setShowOptions] = useState(false);
-    const [options, setOptions] = useState<SelectedValue[]>([]);
-    const [keyword, setKeyword] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
+    const [selected, setSelected] = useState<SelectedValue[]>(
+      initState.selected
+    );
+    const [showOptions, setShowOptions] = useState(initState.showOptions);
+    const [options, setOptions] = useState<SelectedValue[]>(initState.options);
+    const [keyword, setKeyword] = useState(initState.keyword);
+    const [isLoading, setIsLoading] = useState(initState.isLoading);
 
     useEffect(() => {
       let defaultSelected = [];
@@ -52,7 +62,7 @@ const Select = forwardRef<any, any>(
       setSelected(defaultSelected);
     }, [value]);
 
-    const handleOptions = (
+    const removeSelectedOptions = (
       options: SelectedValue[],
       searchText?: string,
       selectedList?: string[]
@@ -73,16 +83,16 @@ const Select = forwardRef<any, any>(
     };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    const fetchOptions = useCallback(
+    const callbackFetchOptions = useCallback(
       debounce(async (...args: any) => {
         if (loadOptions) {
           setIsLoading(true);
           let data = await loadOptions(...args);
 
-          handleOptions(data, ...args);
+          removeSelectedOptions(data, ...args);
 
           setTimeout(() => {
-            setIsLoading(false);
+            setIsLoading(initState.isLoading);
           }, 500);
         }
       }, 500),
@@ -90,12 +100,11 @@ const Select = forwardRef<any, any>(
     );
 
     useEffect(() => {
-      fetchOptions(
+      callbackFetchOptions(
         keyword,
         selected.map((e) => e.value)
       );
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [keyword, selected]);
+    }, [keyword, selected, callbackFetchOptions]);
 
     const $selectRef = useRef<HTMLDivElement>();
 
@@ -105,11 +114,9 @@ const Select = forwardRef<any, any>(
     const handleShowOptions = () => setShowOptions(!showOptions);
 
     const selectOption = (option: SelectedValue) => {
-      const data = isMultiple ? [...selected, option] : [option];
-
-      onChange(data);
-      setSelected(data);
-      setKeyword('');
+      onChange(isMultiple ? [...selected, option] : option);
+      setSelected((prev) => (isMultiple ? [...prev, option] : [option]));
+      setKeyword(initState.keyword);
       handleShowOptions();
     };
 
@@ -118,12 +125,17 @@ const Select = forwardRef<any, any>(
       option: SelectedValue
     ) => {
       e.stopPropagation();
-      setSelected(selected.filter((x) => x.value !== option.value));
+      const restSelected = selected.filter((x) => x.value !== option.value);
+
+      setSelected(restSelected);
+      onChange(restSelected);
     };
 
     const clearSelected = (e: MouseEvent<HTMLElement>) => {
       e.stopPropagation();
-      setSelected([]);
+
+      setSelected(initState.selected);
+      onChange(initState.selected);
     };
 
     const selectSearch = (e: ChangeEvent<HTMLInputElement>) =>

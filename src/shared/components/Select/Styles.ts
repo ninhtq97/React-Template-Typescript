@@ -1,6 +1,7 @@
 import { CloseOutline } from '@styled-icons/evaicons-outline';
 import { ChevronDown } from '@styled-icons/ionicons-solid';
 import styled, { css } from 'styled-components';
+import { InputElement } from '../Input/styles';
 
 export const SelectIndicator = styled.div`
   display: flex;
@@ -107,37 +108,7 @@ export const SelectOptionsContainer = styled.div`
   background-color: #fff;
 `;
 
-export const FieldInput = styled.input<Record<string, any>>`
-  height: 40px;
-  width: 100%;
-  padding: 0 7px;
-  border-radius: 3px;
-  border: 1px solid #dfe1e6;
-  color: #172b4d;
-  transition: background 0.1s;
-  font-size: 15px;
-  outline: none;
-  ${(props) => props.hasIcon && 'padding-left: 32px;'}
-  &:hover {
-    background: #ebecf0;
-  }
-  &:focus {
-    background: #fff;
-    border: 1px solid #4c9aff;
-    box-shadow: 0 0 0 1px #4c9aff;
-  }
-  ${(props) =>
-    props.invalid &&
-    css`
-      &,
-      &:focus {
-        border: 1px solid #e13c3c;
-        box-shadow: none;
-      }
-    `}
-`;
-
-export const SelectSearch = styled(FieldInput)`
+export const SelectSearch = styled(InputElement)`
   user-select: none;
   margin-bottom: 10px;
 `;
@@ -146,16 +117,16 @@ export const SelectOptions = styled.div`
   position: relative;
   border-top: 1px solid #ebedf3;
   padding: 10px 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 `;
 
 export const SelectOptionItem = styled.div<Record<string, any>>`
   padding: 10px;
   border-radius: 4px;
   cursor: pointer;
-
-  &:not(:last-child) {
-    margin-bottom: 4px;
-  }
 
   &:hover {
     background-color: #eee;
