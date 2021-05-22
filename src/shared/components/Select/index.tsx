@@ -1,6 +1,5 @@
 import { debounce } from 'lodash';
 import {
-  ChangeEvent,
   forwardRef,
   MouseEvent,
   useCallback,
@@ -138,8 +137,7 @@ const Select = forwardRef<HTMLDivElement, any>(
       onChange(initState.selected);
     };
 
-    const selectSearch = (e: ChangeEvent<HTMLInputElement>) =>
-      setKeyword(e.target.value);
+    const selectSearch = (value) => setKeyword(value);
 
     return (
       <StyledSelect

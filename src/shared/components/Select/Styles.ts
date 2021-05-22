@@ -1,7 +1,7 @@
 import { CloseOutline } from '@styled-icons/evaicons-outline';
 import { ChevronDown } from '@styled-icons/ionicons-solid';
 import styled, { css } from 'styled-components';
-import { InputElement } from '../Input/styles';
+import Input from '../Input';
 
 export const SelectIndicator = styled.div`
   display: flex;
@@ -108,8 +108,7 @@ export const SelectOptionsContainer = styled.div`
   background-color: #fff;
 `;
 
-export const SelectSearch = styled(InputElement)`
-  user-select: none;
+export const SelectSearch = styled(Input)`
   margin-bottom: 10px;
 `;
 

@@ -1,3 +1,4 @@
+import color from 'shared/styles/color';
 import styled, { css } from 'styled-components';
 
 export const StyledInput = styled.div`
@@ -14,7 +15,7 @@ export const InputElement = styled.input<Record<string, any>>`
   transition: background 0.1s;
   font-size: 15px;
   outline: none;
-  ${(props) => props.hasIcon && 'padding-left: 32px;'}
+  ${(props) => props.hasIcon && `padding-${props.iconPlacement}: 32px;`}
   &:hover {
     background: #ebecf0;
   }
@@ -32,4 +33,15 @@ export const InputElement = styled.input<Record<string, any>>`
         box-shadow: none;
       }
     `}
+`;
+
+export const StyledIcon = styled.div<Record<string, any>>`
+  position: absolute;
+  top: 50%;
+  ${(props) => css`
+    ${props.placement}: 8px;
+  `}
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: ${color.textMedium};
 `;
