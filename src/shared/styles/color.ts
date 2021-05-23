@@ -20,6 +20,10 @@ const color = {
   backgroundLightest: '#F4F5F7',
   backgroundLightPrimary: '#D2E5FE',
   backgroundLightSuccess: '#E4FCEF',
+
+  borderLightest: '#dfe1e6',
+  borderLight: '#C1C7D0',
+  borderInputFocus: '#4c9aff',
 };
 
 export default color;

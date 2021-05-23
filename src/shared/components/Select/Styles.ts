@@ -1,170 +1,150 @@
+import { ChevronDown } from '@styled-icons/entypo';
 import { CloseOutline } from '@styled-icons/evaicons-outline';
-import { ChevronDown } from '@styled-icons/ionicons-solid';
+import color from 'shared/styles/color';
+import { font } from 'shared/styles/font';
+import mixin, { zIndexValues } from 'shared/styles/mixin';
 import styled, { css } from 'styled-components';
-import Input from '../Input';
 
-export const SelectIndicator = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-export const SelectIcon = styled.div<Record<string, any>>`
+export const StyledSelect = styled.div<Record<string, any>>`
   position: relative;
-  padding: 8px;
-
+  border-radius: 4px;
+  cursor: pointer;
+  ${font.size(14)}
+  ${(props) => props.variant === 'empty' && `display: inline-block;`}
   ${(props) =>
-    props.hasValue &&
+    props.variant === 'normal' &&
     css`
-      margin-left: 8px;
-
-      &::after {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 0;
-        transform: translateY(-50%);
-        width: 1px;
-        height: 20px;
-        background-color: #e6e6e6;
+      width: 100%;
+      border: 1px solid ${color.borderLightest};
+      background: ${color.backgroundLightest};
+      transition: background 0.1s;
+      &:hover {
+        background: ${color.backgroundLight};
+      }
+    `}
+  &:focus {
+    outline: none;
+    ${(props) =>
+      props.variant === 'normal' &&
+      css`
+        border: 1px solid ${color.borderInputFocus};
+        box-shadow: 0 0 0 1px ${color.borderInputFocus};
+        background: #fff;
+      }
+    `}
+  }
+  ${(props) =>
+    props.invalid &&
+    css`
+      &,
+      &:focus {
+        border: 1px solid ${color.danger};
+        box-shadow: none;
       }
     `}
 `;
 
-export const SelectArrow = styled(ChevronDown)`
-  transition: all 100ms;
-  color: #ccc;
-`;
-
-export const SelectControl = styled.div<Record<string, any>>`
+export const ValueContainer = styled.div<Record<string, any>>`
   display: flex;
   align-items: center;
-  justify-content: center;
-  border-radius: 4px;
-  background: #ffffff;
-  border: 1px solid #ebedf3;
-  transition: all 100ms;
-`;
-
-export const SelectValue = styled.div`
-  flex: 1;
-  padding: 4px 8px;
-  display: flex;
-  align-items: center;
-`;
-
-export const SelectValueItem = styled.div<Record<string, any>>`
-  position: relative;
-  display: flex;
-  align-items: center;
-
-  ${(props) =>
-    props.isMultiple
-      ? css`
-          color: #243656;
-          cursor: pointer;
-          background-color: #f7f7f7;
-          margin-right: 8px;
-          padding: 4px 8px;
-          border-radius: 4px;
-
-          &:hover {
-            background: rgba(31 211 146 0.1);
-            color: #1fd392;
-          }
-        `
-      : css``}
-`;
-
-export const SelectPlaceholder = styled.span`
-  user-select: none;
-  color: #bac1cf;
-`;
-
-export const SelectText = styled.span``;
-
-export const SelectRemove = styled.div<Record<string, any>>`
-  cursor: pointer;
-  margin-left: 4px;
-  ${(props) =>
-    props.isRemoveAll &&
-    css`
-      color: #ccc;
-      &:hover {
-        color: #999;
-      }
-    `};
-`;
-export const SelectRemoveIcon = styled(CloseOutline)``;
-
-export const SelectOptionsContainer = styled.div`
-  position: absolute;
-  top: calc(100% + 1px);
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 100;
+  justify-content: space-between;
   width: 100%;
-  border: 1px solid #ebedf3;
-  padding: 10px;
-  background-color: #fff;
+  ${(props) =>
+    props.variant === 'normal' &&
+    css`
+      min-height: 32px;
+      padding: 5px 5px 5px 10px;
+    `}
 `;
 
-export const SelectSearch = styled(Input)`
-  margin-bottom: 10px;
+export const ChevronIcon = styled(ChevronDown)`
+  margin-left: auto;
+  font-size: 18px;
+  color: ${color.textMedium};
 `;
 
-export const SelectOptions = styled.div`
-  position: relative;
-  border-top: 1px solid #ebedf3;
-  padding: 10px 0;
+export const Placeholder = styled.div`
+  color: ${color.textLight};
+`;
 
+export const ValueMulti = styled.div<Record<string, any>>`
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  align-items: center;
+  flex-wrap: wrap;
+  ${(props) => props.variant === 'normal' && `padding-top: 5px;`}
 `;
 
-export const SelectOptionItem = styled.div<Record<string, any>>`
-  padding: 10px;
-  border-radius: 4px;
-  cursor: pointer;
+export const ValueMultiItem = styled.div`
+  margin: 0 5px 5px 0;
+  ${mixin.tag()}
+`;
 
-  &:hover {
-    background-color: #eee;
+export const AddMore = styled.div`
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 3px;
+  padding: 3px 0;
+  ${font.size(12.5)}
+  ${mixin.link()}
+  i {
+    margin-right: 3px;
+    vertical-align: middle;
+    font-size: 14px;
   }
 `;
 
-export const SelectContainer = styled.div``;
+export const Dropdown = styled.div<Record<string, any>>`
+  z-index: ${zIndexValues.dropdown};
+  position: absolute;
+  top: 100%;
+  left: 0;
+  border-radius: 0 0 4px 4px;
+  background: #fff;
+  ${mixin.boxShadowDropdown}
+  ${(props) => (props.width ? `width: ${props.width}px;` : 'width: 100%;')}
+`;
 
-export const StyledSelect = styled.div<Record<string, any>>`
-  position: relative;
+export const DropdownInputContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
 
-  ${(props) =>
-    props.showOptions
-      ? css`
-          ${SelectControl} {
-            border: 1px solid #4c9aff;
-            box-shadow: 0 0 0 1px #4c9aff;
-          }
-        `
-      : css`
-          &:hover {
-            ${SelectControl} {
-              border-color: #b3b3b3;
-            }
+export const DropdownInput = styled.input`
+  padding: 10px 14px 8px;
+  width: 100%;
+  border: none;
+  color: ${color.textDarkest};
+  background: none;
+  &:focus {
+    outline: none;
+  }
+`;
 
-            ${SelectArrow} {
-              color: #999;
-            }
-          }
-        `};
+export const ClearIcon = styled(CloseOutline)`
+  color: ${color.textMedium};
+  ${mixin.clickable}
+`;
 
-  ${(props) =>
-    props.isDisable
-      ? css`
-          pointer-events: none;
+export const Options = styled.div`
+  max-height: 200px;
+  ${mixin.scrollableY};
+  ${mixin.veritcalScrollbar()};
+`;
 
-          ${SelectControl} {
-            background-color: #ebedf3;
-          }
-        `
-      : css``}
+export const Option = styled.div`
+  padding: 8px 14px;
+  word-break: break-word;
+  cursor: pointer;
+  &:last-of-type {
+    margin-bottom: 8px;
+  }
+  &.jira-select-option-is-active {
+    background: ${color.backgroundLightPrimary};
+  }
+`;
+
+export const OptionsNoResults = styled.div`
+  padding: 5px 15px 15px;
+  color: ${color.textLight};
 `;

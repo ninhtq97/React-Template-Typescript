@@ -1,5 +1,5 @@
 import Spinner from './Spinner';
-import { StyledPlaceholderLoading } from './styles';
+import { StyledPlaceholderLoading } from './Styles';
 
 const PlaceholderLoading = () => (
   <StyledPlaceholderLoading>

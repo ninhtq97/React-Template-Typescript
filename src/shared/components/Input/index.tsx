@@ -1,6 +1,6 @@
 import { ChangeEvent, forwardRef, ReactNode } from 'react';
 import { InputIconPlacement } from 'shared/@types/common';
-import { InputElement, StyledIcon, StyledInput } from './styles';
+import { InputElement, StyledIcon, StyledInput } from './Styles';
 
 type Props = {
   className?: string;

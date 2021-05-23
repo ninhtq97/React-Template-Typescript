@@ -1,213 +1,203 @@
-import { debounce } from 'lodash';
+import { PlusOutline } from '@styled-icons/evaicons-outline';
+import { useRef, useState } from 'react';
+import { KeyCodes } from 'shared/constants/keyCode';
+import Icon from '../Icon';
+// import useOnOutsideClick from 'shared/hooks/onOutsideClick';
+import Dropdown from './Dropdown';
 import {
-  forwardRef,
-  MouseEvent,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
-import { SelectedValue } from 'shared/@types/select';
-import EmptyData from '../EmptyData';
-import PlaceholderLoading from '../Loading/Placeholder';
-import {
-  SelectArrow,
-  SelectContainer,
-  SelectControl,
-  SelectIcon,
-  SelectIndicator,
-  SelectOptionItem,
-  SelectOptions,
-  SelectOptionsContainer,
-  SelectPlaceholder,
-  SelectRemove,
-  SelectRemoveIcon,
-  SelectSearch,
-  SelectValue,
-  SelectValueItem,
+  AddMore,
+  ChevronIcon,
+  ClearIcon,
+  Placeholder,
   StyledSelect,
-} from './styles';
+  ValueContainer,
+  ValueMulti,
+  ValueMultiItem,
+} from './Styles';
 
-const initState = {
-  selected: [],
-  showOptions: false,
-  options: [],
-  keyword: '',
-  isLoading: false,
+const defaultProps = {
+  className: undefined,
+  variant: 'normal',
+  dropdownWidth: undefined,
+  name: undefined,
+  value: undefined,
+  defaultValue: undefined,
+  placeholder: 'Select',
+  invalid: false,
+  onCreate: undefined,
+  isMulti: false,
+  withClearValue: true,
+  renderValue: undefined,
+  renderOption: undefined,
 };
 
-const Select = forwardRef<HTMLDivElement, any>(
-  (
-    { isMultiple, isDisable, loadOptions, value, onChange, placeholder },
-    $ref
-  ) => {
-    const [selected, setSelected] = useState<SelectedValue[]>(
-      initState.selected
-    );
-    const [showOptions, setShowOptions] = useState(initState.showOptions);
-    const [options, setOptions] = useState<SelectedValue[]>(initState.options);
-    const [keyword, setKeyword] = useState(initState.keyword);
-    const [isLoading, setIsLoading] = useState(initState.isLoading);
+const Select = ({
+  className,
+  variant,
+  dropdownWidth,
+  name,
+  value: propsValue,
+  defaultValue,
+  placeholder,
+  invalid,
+  options,
+  onChange,
+  onCreate,
+  isMulti,
+  withClearValue,
+  renderValue: propsRenderValue,
+  renderOption: propsRenderOption,
+}) => {
+  const [stateValue, setStateValue] = useState(
+    defaultValue || (isMulti ? [] : null)
+  );
+  const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState('');
 
-    useEffect(() => {
-      let defaultSelected = [];
+  const isControlled = propsValue !== undefined;
+  const value = isControlled ? propsValue : stateValue;
 
-      const isArray = Array.isArray(value);
+  const $selectRef = useRef<any>();
+  const $inputRef = useRef<any>();
 
-      if (value) {
-        defaultSelected = isArray ? value : [value];
-      }
+  const activateDropdown = () => {
+    if (isDropdownOpen) {
+      $inputRef.current.focus();
+    } else {
+      setDropdownOpen(true);
+    }
+  };
 
-      setSelected(defaultSelected);
-    }, [value]);
+  const deactivateDropdown = () => {
+    setDropdownOpen(false);
+    setSearchValue('');
+    $selectRef.current.focus();
+  };
 
-    const removeSelectedOptions = (
-      options: SelectedValue[],
-      searchText?: string,
-      selectedList?: string[]
-    ) => {
-      let newOptions = options;
+  // useOnOutsideClick($selectRef, isDropdownOpen, deactivateDropdown);
 
-      if (selectedList?.length) {
-        selectedList.forEach((y) => {
-          newOptions = newOptions.filter((x) => x.value !== y);
-        });
-      }
-
-      newOptions = newOptions.filter((x) =>
-        new RegExp(`${searchText}`, 'gi').test(x.label)
-      );
-
-      setOptions(newOptions);
-    };
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const callbackFetchOptions = useCallback(
-      debounce(async (...args: any) => {
-        if (loadOptions) {
-          setIsLoading(true);
-          let data = await loadOptions(...args);
-
-          removeSelectedOptions(data, ...args);
-
-          setTimeout(() => {
-            setIsLoading(initState.isLoading);
-          }, 500);
-        }
-      }, 500),
-      []
+  const preserveValueType = (newValue) => {
+    const areOptionValuesNumbers = options.some(
+      (option) => typeof option.value === 'number'
     );
 
-    useEffect(() => {
-      callbackFetchOptions(
-        keyword,
-        selected.map((e) => e.value)
-      );
-    }, [keyword, selected, callbackFetchOptions]);
+    if (areOptionValuesNumbers) {
+      if (isMulti) {
+        return newValue.map(Number);
+      }
+      if (newValue) {
+        return Number(newValue);
+      }
+    }
+    return newValue;
+  };
 
-    const $selectRef = useRef<HTMLDivElement>();
+  const handleChange = (newValue) => {
+    if (!isControlled) {
+      setStateValue(preserveValueType(newValue));
+    }
+    onChange(preserveValueType(newValue));
+  };
 
-    /* Xử lý click ra ngoài */
-    // useOnOutsideClick($selectRef, showOptions, setShowOptions);
+  const removeOptionValue = (optionValue) => {
+    handleChange(value.filter((val) => val !== optionValue));
+  };
 
-    const handleShowOptions = () => setShowOptions(!showOptions);
+  const handleFocusedSelectKeydown = (event) => {
+    if (isDropdownOpen) return;
 
-    const selectOption = (option: SelectedValue) => {
-      onChange(isMultiple ? [...selected, option] : option);
-      setSelected((prev) => (isMultiple ? [...prev, option] : [option]));
-      setKeyword(initState.keyword);
-      handleShowOptions();
-    };
+    if (event.keyCode === KeyCodes.ENTER) {
+      event.preventDefault();
+    }
+    if (
+      event.keyCode !== KeyCodes.ESCAPE &&
+      event.keyCode !== KeyCodes.TAB &&
+      !event.shiftKey
+    ) {
+      setDropdownOpen(true);
+    }
+  };
 
-    const removeSelected = (
-      e: MouseEvent<HTMLElement>,
-      option: SelectedValue
-    ) => {
-      e.stopPropagation();
-      const restSelected = selected.filter((x) => x.value !== option.value);
+  const getOption = (optionValue) =>
+    options.find((option) => option.value === optionValue);
+  const getOptionLabel = (optionValue) =>
+    (getOption(optionValue) || { label: '' }).label;
 
-      setSelected(restSelected);
-      onChange(restSelected);
-    };
+  const isValueEmpty = isMulti ? !value.length : !getOption(value);
 
-    const clearSelected = (e: MouseEvent<HTMLElement>) => {
-      e.stopPropagation();
+  return (
+    <StyledSelect
+      className={className}
+      variant={variant}
+      ref={$selectRef}
+      tabIndex="0"
+      onKeyDown={handleFocusedSelectKeydown}
+      invalid={invalid}
+    >
+      <ValueContainer variant={variant} onClick={activateDropdown}>
+        {isValueEmpty && <Placeholder>{placeholder}</Placeholder>}
 
-      setSelected(initState.selected);
-      onChange(initState.selected);
-    };
+        {!isValueEmpty && !isMulti && propsRenderValue
+          ? propsRenderValue({ value })
+          : getOptionLabel(value)}
 
-    const selectSearch = (value) => setKeyword(value);
-
-    return (
-      <StyledSelect
-        showOptions={showOptions}
-        isDisable={isDisable}
-        ref={$selectRef}
-      >
-        <SelectContainer ref={$ref}>
-          <SelectControl onClick={handleShowOptions}>
-            <SelectValue>
-              {selected.length ? (
-                selected.map((s) => (
-                  <SelectValueItem isMultiple={isMultiple} key={s.value}>
-                    {s.label}
-                    {isMultiple && (
-                      <SelectRemove
-                        onClick={(e: MouseEvent<HTMLElement>) =>
-                          removeSelected(e, s)
-                        }
-                      >
-                        <SelectRemoveIcon size={18} />
-                      </SelectRemove>
-                    )}
-                  </SelectValueItem>
-                ))
+        {!isValueEmpty && isMulti && (
+          <ValueMulti variant={variant}>
+            {value.map((optionValue) =>
+              propsRenderValue ? (
+                propsRenderValue({
+                  value: optionValue,
+                  removeOptionValue: () => removeOptionValue(optionValue),
+                })
               ) : (
-                <SelectPlaceholder>{placeholder}</SelectPlaceholder>
-              )}
-            </SelectValue>
-            <SelectIndicator>
-              {isMultiple && selected.length ? (
-                <SelectRemove onClick={clearSelected} isRemoveAll>
-                  <SelectRemoveIcon size={20} />
-                </SelectRemove>
-              ) : null}
-              <SelectIcon hasValue={!!selected.length}>
-                <SelectArrow size={20} />
-              </SelectIcon>
-            </SelectIndicator>
-          </SelectControl>
-          {showOptions && (
-            <SelectOptionsContainer>
-              <SelectSearch
-                placeholder="Tìm kiếm..."
-                value={keyword}
-                onChange={selectSearch}
-              />
+                <ValueMultiItem
+                  key={optionValue}
+                  onClick={() => removeOptionValue(optionValue)}
+                >
+                  {getOptionLabel(optionValue)}
+                  <Icon>
+                    <ClearIcon size={18} />
+                  </Icon>
+                </ValueMultiItem>
+              )
+            )}
+            <AddMore>
+              <Icon>
+                <PlusOutline size={16} />
+              </Icon>
+              Add more
+            </AddMore>
+          </ValueMulti>
+        )}
 
-              <SelectOptions>
-                {isLoading && <PlaceholderLoading />}
-                {!isLoading && options.length ? (
-                  options.map((option) => (
-                    <SelectOptionItem
-                      key={option.value}
-                      value={option.value}
-                      onClick={() => selectOption(option)}
-                    >
-                      {option.label}
-                    </SelectOptionItem>
-                  ))
-                ) : (
-                  <EmptyData />
-                )}
-              </SelectOptions>
-            </SelectOptionsContainer>
-          )}
-        </SelectContainer>
-      </StyledSelect>
-    );
-  }
-);
+        {(!isMulti || isValueEmpty) && variant !== 'empty' && (
+          <Icon>
+            <ChevronIcon size={20} />
+          </Icon>
+        )}
+      </ValueContainer>
+
+      {isDropdownOpen && (
+        <Dropdown
+          dropdownWidth={dropdownWidth}
+          value={value}
+          isValueEmpty={isValueEmpty}
+          searchValue={searchValue}
+          setSearchValue={setSearchValue}
+          $inputRef={$inputRef}
+          deactivateDropdown={deactivateDropdown}
+          options={options}
+          onChange={handleChange}
+          onCreate={onCreate}
+          isMulti={isMulti}
+          withClearValue={withClearValue}
+          propsRenderOption={propsRenderOption}
+        />
+      )}
+    </StyledSelect>
+  );
+};
+
+Select.defaultProps = defaultProps;
 
 export default Select;

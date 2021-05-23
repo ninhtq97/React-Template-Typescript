@@ -4,6 +4,7 @@ import Button from 'shared/components/Button';
 import Input from 'shared/components/Input';
 import InputDebounce from 'shared/components/Input/Debounce';
 import Select from 'shared/components/Select';
+import SelectTrial from 'shared/components/SelectTrial';
 import 'shared/styles/font.css';
 import GlobalStyles from 'shared/styles/global';
 
@@ -42,14 +43,24 @@ function App() {
     setStatus(data);
   };
 
+  const statusOptions = commonStatusOptions();
+
   return (
     <Fragment>
       <GlobalStyles />
-      <Select
+      <SelectTrial
         value={status}
         placeholder="Trạng thái"
         onChange={onChange}
         loadOptions={commonStatusOptions}
+      />
+      <Select
+        name="assignees"
+        value={statusOptions[0]}
+        options={statusOptions}
+        onChange={() => {}}
+        renderValue={() => {}}
+        renderOption={() => {}}
       />
       <div style={{ marginTop: 8 }}>
         <Button style={{ marginRight: 8 }}>Default Secondary Button</Button>
