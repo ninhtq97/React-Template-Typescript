@@ -54,14 +54,7 @@ function App() {
         onChange={onChange}
         loadOptions={commonStatusOptions}
       />
-      <Select
-        name="assignees"
-        value={statusOptions[0]}
-        options={statusOptions}
-        onChange={() => {}}
-        renderValue={() => {}}
-        renderOption={() => {}}
-      />
+      <Select defaultValue={statusOptions[0]} options={statusOptions} />
       <div style={{ marginTop: 8 }}>
         <Button style={{ marginRight: 8 }}>Default Secondary Button</Button>
         <Button variant="primary" style={{ marginRight: 8 }}>

@@ -7,7 +7,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import { SelectedValue } from 'shared/@types/select';
+import { SelectOption } from 'shared/@types/select';
 import EmptyData from '../EmptyData';
 import PlaceholderLoading from '../Loading/Placeholder';
 import {
@@ -41,11 +41,11 @@ const Select = forwardRef<HTMLDivElement, any>(
     { isMultiple, isDisable, loadOptions, value, onChange, placeholder },
     $ref
   ) => {
-    const [selected, setSelected] = useState<SelectedValue[]>(
+    const [selected, setSelected] = useState<SelectOption[]>(
       initState.selected
     );
     const [showOptions, setShowOptions] = useState(initState.showOptions);
-    const [options, setOptions] = useState<SelectedValue[]>(initState.options);
+    const [options, setOptions] = useState<SelectOption[]>(initState.options);
     const [keyword, setKeyword] = useState(initState.keyword);
     const [isLoading, setIsLoading] = useState(initState.isLoading);
 
@@ -62,7 +62,7 @@ const Select = forwardRef<HTMLDivElement, any>(
     }, [value]);
 
     const removeSelectedOptions = (
-      options: SelectedValue[],
+      options: SelectOption[],
       searchText?: string,
       selectedList?: string[]
     ) => {
@@ -112,7 +112,7 @@ const Select = forwardRef<HTMLDivElement, any>(
 
     const handleShowOptions = () => setShowOptions(!showOptions);
 
-    const selectOption = (option: SelectedValue) => {
+    const selectOption = (option: SelectOption) => {
       onChange(isMultiple ? [...selected, option] : option);
       setSelected((prev) => (isMultiple ? [...prev, option] : [option]));
       setKeyword(initState.keyword);
@@ -121,7 +121,7 @@ const Select = forwardRef<HTMLDivElement, any>(
 
     const removeSelected = (
       e: MouseEvent<HTMLElement>,
-      option: SelectedValue
+      option: SelectOption
     ) => {
       e.stopPropagation();
       const restSelected = selected.filter((x) => x.value !== option.value);

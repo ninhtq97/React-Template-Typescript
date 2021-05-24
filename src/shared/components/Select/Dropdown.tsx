@@ -1,5 +1,14 @@
 import { uniq } from 'lodash';
-import React, { useLayoutEffect, useRef, useState } from 'react';
+import React, {
+  Dispatch,
+  FC,
+  MutableRefObject,
+  SetStateAction,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
+import { SelectOption } from 'shared/@types/select';
 import { KeyCodes } from 'shared/constants/keyCode';
 import Icon from '../Icon';
 import {
@@ -12,7 +21,23 @@ import {
   OptionsNoResults,
 } from './Styles';
 
-const SelectDropdown = ({
+type Props = {
+  isMulti?: boolean;
+  isValueEmpty: boolean;
+  dropdownWidth?: number;
+  value: any;
+  searchValue: string;
+  setSearchValue: Dispatch<SetStateAction<string>>;
+  $inputRef: MutableRefObject<any>;
+  deactivateDropdown: Function;
+  options: SelectOption[];
+  propsRenderOption?: FC<any>;
+  withClearValue?: boolean;
+  onChange?: Function;
+  onCreate?: Function;
+};
+
+const SelectDropdown: FC<Props> = ({
   dropdownWidth,
   value,
   isValueEmpty,
@@ -45,25 +70,29 @@ const SelectDropdown = ({
 
   const selectOptionValue = (optionValue) => {
     deactivateDropdown();
-    if (isMulti) {
-      onChange(uniq([...value, optionValue]));
-    } else {
-      onChange(optionValue);
+    if (onChange) {
+      if (isMulti) {
+        onChange(uniq([...value, optionValue]));
+      } else {
+        onChange(optionValue);
+      }
     }
   };
 
   const createOption = (newOptionLabel) => {
     setCreatingOption(true);
-    onCreate(newOptionLabel, (createdOptionValue) => {
-      setCreatingOption(false);
-      selectOptionValue(createdOptionValue);
-    });
+    if (onCreate) {
+      onCreate(newOptionLabel, (createdOptionValue) => {
+        setCreatingOption(false);
+        selectOptionValue(createdOptionValue);
+      });
+    }
   };
 
   const clearOptionValues = () => {
     $inputRef.current.value = '';
     $inputRef.current.focus();
-    onChange(isMulti ? [] : null);
+    if (onChange) onChange(isMulti ? [] : null);
   };
 
   const handleInputKeyDown = (event) => {
@@ -190,7 +219,6 @@ const SelectDropdown = ({
           <Option
             key={option.value}
             data-select-option-value={option.value}
-            data-testid={`select-option:${option.label}`}
             onMouseEnter={handleOptionMouseEnter}
             onClick={() => selectOptionValue(option.value)}
           >

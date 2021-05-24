@@ -1,5 +1,6 @@
 import { PlusOutline } from '@styled-icons/evaicons-outline';
-import { useRef, useState } from 'react';
+import { FC, useRef, useState } from 'react';
+import { SelectOption, SelectVariant } from 'shared/@types/select';
 import { KeyCodes } from 'shared/constants/keyCode';
 import Icon from '../Icon';
 // import useOnOutsideClick from 'shared/hooks/onOutsideClick';
@@ -15,35 +16,35 @@ import {
   ValueMultiItem,
 } from './Styles';
 
-const defaultProps = {
-  className: undefined,
-  variant: 'normal',
-  dropdownWidth: undefined,
-  name: undefined,
-  value: undefined,
-  defaultValue: undefined,
-  placeholder: 'Select',
-  invalid: false,
-  onCreate: undefined,
-  isMulti: false,
-  withClearValue: true,
-  renderValue: undefined,
-  renderOption: undefined,
+type Props = {
+  className?: string;
+  isMulti?: boolean;
+  variant?: SelectVariant;
+  dropdownWidth?: number;
+  value?: string | SelectOption[];
+  defaultValue?: any;
+  options: SelectOption[];
+  renderValue?: FC<any>;
+  renderOption?: FC<any>;
+  placeholder?: string;
+  invalid?: boolean;
+  withClearValue?: boolean;
+  onChange?: Function;
+  onCreate?: Function;
 };
 
-const Select = ({
+const Select: FC<Props> = ({
   className,
-  variant,
+  variant = 'normal',
   dropdownWidth,
-  name,
   value: propsValue,
   defaultValue,
-  placeholder,
-  invalid,
+  placeholder = 'Select',
+  invalid = false,
   options,
   onChange,
   onCreate,
-  isMulti,
+  isMulti = false,
   withClearValue,
   renderValue: propsRenderValue,
   renderOption: propsRenderOption,
@@ -96,7 +97,7 @@ const Select = ({
     if (!isControlled) {
       setStateValue(preserveValueType(newValue));
     }
-    onChange(preserveValueType(newValue));
+    if (onChange) onChange(preserveValueType(newValue));
   };
 
   const removeOptionValue = (optionValue) => {
@@ -197,7 +198,5 @@ const Select = ({
     </StyledSelect>
   );
 };
-
-Select.defaultProps = defaultProps;
 
 export default Select;
