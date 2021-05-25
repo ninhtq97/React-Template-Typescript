@@ -30,7 +30,7 @@ const CommonStatusView = {
 };
 
 const commonStatusOptions = () => {
-  return Object.values(CommonStatus).map((status) => ({
+  return Object.values(CommonStatus).map((status: string) => ({
     label: CommonStatusView[status],
     value: status,
   }));
@@ -44,6 +44,7 @@ function App() {
   };
 
   const statusOptions = commonStatusOptions();
+  const [options, setOptions] = useState(statusOptions);
 
   return (
     <Fragment>
@@ -54,7 +55,16 @@ function App() {
         onChange={onChange}
         loadOptions={commonStatusOptions}
       />
-      <Select defaultValue={statusOptions[0]} options={statusOptions} />
+      <Select
+        options={options}
+        onCreate={(newOptionLabel: string, callback) => {
+          const value = 'exist';
+          const option = { label: newOptionLabel, value };
+
+          setOptions((prev) => [...prev, option]);
+          callback(value);
+        }}
+      />
       <div style={{ marginTop: 8 }}>
         <Button style={{ marginRight: 8 }}>Default Secondary Button</Button>
         <Button variant="primary" style={{ marginRight: 8 }}>

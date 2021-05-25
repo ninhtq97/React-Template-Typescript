@@ -79,7 +79,7 @@ const SelectDropdown: FC<Props> = ({
     }
   };
 
-  const createOption = (newOptionLabel) => {
+  const createOption = (newOptionLabel: string) => {
     setCreatingOption(true);
     if (onCreate) {
       onCreate(newOptionLabel, (createdOptionValue) => {
@@ -246,6 +246,6 @@ const SelectDropdown: FC<Props> = ({
   );
 };
 
-const activeOptionClass = 'jira-select-option-is-active';
+const activeOptionClass = 'select-option-is-active';
 
 export default SelectDropdown;
