@@ -2,6 +2,7 @@ import { PlusOutline } from '@styled-icons/evaicons-outline';
 import { FC, useRef, useState } from 'react';
 import { SelectOption, SelectVariant } from 'shared/@types/select';
 import { KeyCodes } from 'shared/constants/keyCode';
+import useOnOutsideClick from 'shared/hooks/onOutsideClick';
 import Icon from '../Icon';
 // import useOnOutsideClick from 'shared/hooks/onOutsideClick';
 import Dropdown from './Dropdown';
@@ -75,7 +76,7 @@ const Select: FC<Props> = ({
     $selectRef.current.focus();
   };
 
-  // useOnOutsideClick($selectRef, isDropdownOpen, deactivateDropdown);
+  useOnOutsideClick($selectRef, isDropdownOpen, deactivateDropdown);
 
   const preserveValueType = (newValue) => {
     const areOptionValuesNumbers = options.some(

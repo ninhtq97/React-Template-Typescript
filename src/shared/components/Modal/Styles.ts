@@ -53,7 +53,6 @@ const modalStyles = {
 
 export const CloseIcon = styled(Icon)`
   position: absolute;
-  font-size: 25px;
   color: ${color.textMedium};
   transition: all 0.1s;
   ${mixin.clickable}

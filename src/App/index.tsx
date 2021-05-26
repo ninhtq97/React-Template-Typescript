@@ -1,5 +1,9 @@
 import { SearchOutline } from '@styled-icons/evaicons-outline';
 import { Fragment, useState } from 'react';
+import {
+  ModalRenderContentProps,
+  ModalRenderLinkProps,
+} from 'shared/@types/modal';
 import Button from 'shared/components/Button';
 import Input from 'shared/components/Input';
 import InputDebounce from 'shared/components/Input/Debounce';
@@ -7,6 +11,7 @@ import Select from 'shared/components/Select';
 import SelectTrial from 'shared/components/SelectTrial';
 import 'shared/styles/font.css';
 import GlobalStyles from 'shared/styles/global';
+import Modal from '../shared/components/Modal';
 
 enum DefaultStatus {
   ALL = 'all',
@@ -64,6 +69,17 @@ function App() {
           setOptions((prev) => [...prev, option]);
           callback(value);
         }}
+      />
+
+      <Modal
+        renderLink={({ open }: ModalRenderLinkProps) => (
+          <Button variant="primary" onClick={open}>
+            Show Modal
+          </Button>
+        )}
+        renderContent={({ close }: ModalRenderContentProps) => (
+          <div>Modal Content</div>
+        )}
       />
       <div style={{ marginTop: 8 }}>
         <Button style={{ marginRight: 8 }}>Default Secondary Button</Button>

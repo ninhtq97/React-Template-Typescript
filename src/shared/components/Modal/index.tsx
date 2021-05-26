@@ -9,6 +9,8 @@ import React, {
 } from 'react';
 import ReactDOM from 'react-dom';
 import { ModalVariant } from 'shared/@types/modal';
+import useOnEscapeKeyDown from 'shared/hooks/onEscapeKeyDown';
+import useOnOutsideClick from 'shared/hooks/onOutsideClick';
 import {
   ClickableOverlay,
   CloseIcon,
@@ -21,9 +23,9 @@ type Props = {
   variant?: ModalVariant;
   width?: number;
   withCloseIcon?: boolean;
-  isOpen: Function;
-  onClose: Function;
-  renderLink?: FC<any>;
+  isOpen?: boolean;
+  onClose?: Function;
+  renderLink: FC<any>;
   renderContent: FC<any>;
 };
 
@@ -34,12 +36,12 @@ const Modal: FC<Props> = ({
   withCloseIcon = true,
   isOpen: propsIsOpen,
   onClose: tellParentToClose = () => {},
-  renderLink = () => {},
+  renderLink,
   renderContent,
 }) => {
   const [stateIsOpen, setStateOpen] = useState(false);
   const isControlled = typeof propsIsOpen === 'boolean';
-  const isOpen = isControlled ? propsIsOpen : stateIsOpen;
+  const isOpen = isControlled ? !!propsIsOpen : stateIsOpen;
 
   const $modalRef = useRef();
   const $clickableOverlayRef = useRef();
@@ -52,11 +54,11 @@ const Modal: FC<Props> = ({
     }
   }, [isControlled, tellParentToClose]);
 
-  // useOnOutsideClick($modalRef, isOpen, closeModal, $clickableOverlayRef);
-  // useOnEscapeKeyDown(isOpen, closeModal);
+  useOnOutsideClick($modalRef, isOpen, closeModal, $clickableOverlayRef);
+  useOnEscapeKeyDown(isOpen, closeModal);
 
   useEffect(() => {
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = isOpen ? 'hidden' : 'visible';
 
     return () => {
       document.body.style.overflow = 'visible';
