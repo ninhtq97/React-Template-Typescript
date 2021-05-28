@@ -1,53 +1,32 @@
-import { debounce } from 'lodash';
-import {
-  forwardRef,
-  MouseEvent,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { uniq } from 'lodash';
+import { forwardRef, useCallback, useEffect, useRef, useState } from 'react';
 import { SelectOption } from 'shared/@types/select';
-import EmptyData from '../EmptyData';
-import PlaceholderLoading from '../Loading/Placeholder';
+import useOnOutsideClick from 'shared/hooks/onOutsideClick';
+import Dropdown from './Dropdown';
 import {
   SelectArrow,
   SelectContainer,
   SelectControl,
   SelectIcon,
   SelectIndicator,
-  SelectOptionItem,
-  SelectOptions,
-  SelectOptionsContainer,
   SelectPlaceholder,
   SelectRemove,
   SelectRemoveIcon,
-  SelectSearch,
   SelectValue,
   SelectValueItem,
   StyledSelect,
 } from './Styles';
 
-const initState = {
-  selected: [],
-  showOptions: false,
-  options: [],
-  keyword: '',
-  isLoading: false,
-};
-
-const Select = forwardRef<HTMLDivElement, any>(
+const Select = forwardRef<any, any>(
   (
     { isMultiple, isDisable, loadOptions, value, onChange, placeholder },
     $ref
   ) => {
-    const [selected, setSelected] = useState<SelectOption[]>(
-      initState.selected
-    );
-    const [showOptions, setShowOptions] = useState(initState.showOptions);
-    const [options, setOptions] = useState<SelectOption[]>(initState.options);
-    const [keyword, setKeyword] = useState(initState.keyword);
-    const [isLoading, setIsLoading] = useState(initState.isLoading);
+    const [selected, setSelected] = useState<SelectOption[]>([]);
+    const [options, setOptions] = useState<SelectOption[]>([]);
+    const [searchValue, setSearchValue] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const [isDropdownOpen, setDropdownOpen] = useState(false);
 
     useEffect(() => {
       let defaultSelected = [];
@@ -61,103 +40,71 @@ const Select = forwardRef<HTMLDivElement, any>(
       setSelected(defaultSelected);
     }, [value]);
 
-    const removeSelectedOptions = (
-      options: SelectOption[],
-      searchText?: string,
-      selectedList?: string[]
-    ) => {
-      let newOptions = options;
-
-      if (selectedList?.length) {
-        selectedList.forEach((y) => {
-          newOptions = newOptions.filter((x) => x.value !== y);
-        });
-      }
-
-      newOptions = newOptions.filter((x) =>
-        new RegExp(`${searchText}`, 'gi').test(x.label)
-      );
-
-      setOptions(newOptions);
-    };
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    const callbackFetchOptions = useCallback(
-      debounce(async (...args: any) => {
+    const fetchOptions = useCallback(
+      async (params) => {
         if (loadOptions) {
           setIsLoading(true);
-          let data = await loadOptions(...args);
 
-          removeSelectedOptions(data, ...args);
+          const data = await loadOptions(params);
 
-          setTimeout(() => {
-            setIsLoading(initState.isLoading);
-          }, 500);
+          setOptions(data);
+          setIsLoading(false);
         }
-      }, 500),
-      []
+      },
+      [loadOptions]
     );
 
     useEffect(() => {
-      callbackFetchOptions(
-        keyword,
-        selected.map((e) => e.value)
-      );
-    }, [keyword, selected, callbackFetchOptions]);
+      if (isDropdownOpen) {
+        fetchOptions({ q: searchValue });
+      }
+    }, [fetchOptions, isDropdownOpen, searchValue]);
 
     const $selectRef = useRef<HTMLDivElement>();
 
-    /* Xử lý click ra ngoài */
-    // useOnOutsideClick($selectRef, showOptions, setShowOptions);
+    const handleShowDropdown = () => setDropdownOpen(!isDropdownOpen);
 
-    const handleShowOptions = () => setShowOptions(!showOptions);
+    useOnOutsideClick($selectRef, isDropdownOpen, handleShowDropdown);
 
     const selectOption = (option: SelectOption) => {
-      onChange(isMultiple ? [...selected, option] : option);
-      setSelected((prev) => (isMultiple ? [...prev, option] : [option]));
-      setKeyword(initState.keyword);
-      handleShowOptions();
+      onChange(isMultiple ? uniq([...selected, option]) : option);
+      setSelected((prev) => (isMultiple ? uniq([...prev, option]) : [option]));
+      setSearchValue('');
+      handleShowDropdown();
     };
 
-    const removeSelected = (
-      e: MouseEvent<HTMLElement>,
-      option: SelectOption
-    ) => {
+    const removeSelected = (e, option: SelectOption) => {
       e.stopPropagation();
+
       const restSelected = selected.filter((x) => x.value !== option.value);
 
       setSelected(restSelected);
       onChange(restSelected);
     };
 
-    const clearSelected = (e: MouseEvent<HTMLElement>) => {
+    const clearSelected = (e) => {
       e.stopPropagation();
 
-      setSelected(initState.selected);
-      onChange(initState.selected);
+      setSelected([]);
+      onChange([]);
     };
-
-    const selectSearch = (value) => setKeyword(value);
 
     return (
       <StyledSelect
-        showOptions={showOptions}
+        isDropdownOpen={isDropdownOpen}
         isDisable={isDisable}
         ref={$selectRef}
       >
         <SelectContainer ref={$ref}>
-          <SelectControl onClick={handleShowOptions}>
+          <SelectControl onClick={handleShowDropdown}>
             <SelectValue>
               {selected.length ? (
                 selected.map((s) => (
                   <SelectValueItem isMultiple={isMultiple} key={s.value}>
                     {s.label}
                     {isMultiple && (
-                      <SelectRemove
-                        onClick={(e: MouseEvent<HTMLElement>) =>
-                          removeSelected(e, s)
-                        }
-                      >
+                      <SelectRemove onClick={(e) => removeSelected(e, s)}>
                         <SelectRemoveIcon size={18} />
                       </SelectRemove>
                     )}
@@ -178,31 +125,16 @@ const Select = forwardRef<HTMLDivElement, any>(
               </SelectIcon>
             </SelectIndicator>
           </SelectControl>
-          {showOptions && (
-            <SelectOptionsContainer>
-              <SelectSearch
-                placeholder="Tìm kiếm..."
-                value={keyword}
-                onChange={selectSearch}
-              />
-
-              <SelectOptions>
-                {isLoading && <PlaceholderLoading />}
-                {!isLoading && options.length ? (
-                  options.map((option) => (
-                    <SelectOptionItem
-                      key={option.value}
-                      value={option.value}
-                      onClick={() => selectOption(option)}
-                    >
-                      {option.label}
-                    </SelectOptionItem>
-                  ))
-                ) : (
-                  <EmptyData />
-                )}
-              </SelectOptions>
-            </SelectOptionsContainer>
+          {isDropdownOpen && (
+            <Dropdown
+              isMultiple={isMultiple}
+              value={selected}
+              options={options}
+              onChange={selectOption}
+              isLoading={isLoading}
+              searchValue={searchValue}
+              setSearchValue={setSearchValue}
+            />
           )}
         </SelectContainer>
       </StyledSelect>
