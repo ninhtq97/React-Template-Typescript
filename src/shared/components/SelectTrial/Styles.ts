@@ -134,6 +134,15 @@ export const SelectOptionItem = styled.div<Record<string, any>>`
 
 export const SelectContainer = styled.div``;
 
+export const EmptyData = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  color: #bac1cf;
+  margin-top: 10px;
+`;
+
 export const StyledSelect = styled.div<Record<string, any>>`
   position: relative;
 

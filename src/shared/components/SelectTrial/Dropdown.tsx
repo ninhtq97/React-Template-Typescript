@@ -1,7 +1,7 @@
 import { debounce } from 'lodash';
 import { useCallback, useState } from 'react';
-import EmptyData from '../EmptyData';
 import {
+  EmptyData,
   SelectOptionItem,
   SelectOptions,
   SelectOptionsContainer,
@@ -65,7 +65,7 @@ const SelectDropdown = ({
             </SelectOptionItem>
           ))
         ) : (
-          <EmptyData />
+          <EmptyData>Không có kết quả nào</EmptyData>
         )}
       </SelectOptions>
     </SelectOptionsContainer>

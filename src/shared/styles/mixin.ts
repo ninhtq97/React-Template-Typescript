@@ -48,6 +48,14 @@ const mixin = {
     ${customScrollbar()}
   `,
 
+  backgroundImage: (imageURL: string) => css`
+    background-image: url('${imageURL}');
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-color: ${color.backgroundLight};
+  `,
+
   link: (colorValue = color.textLink) => css`
     cursor: pointer;
     color: ${colorValue};
