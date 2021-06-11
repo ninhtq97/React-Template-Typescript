@@ -1,5 +1,5 @@
 import { FC, Fragment, useState } from 'react';
-import { ConfirmModalVariant } from 'shared/@types/modal';
+import { ConfirmModalVariant } from 'shared/types/modal';
 import {
   Actions,
   Message,

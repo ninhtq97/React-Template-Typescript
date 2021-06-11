@@ -1,7 +1,7 @@
 import { uniq } from 'lodash';
 import { forwardRef, useCallback, useEffect, useRef, useState } from 'react';
-import { SelectOption } from 'shared/@types/select';
 import useOnOutsideClick from 'shared/hooks/onOutsideClick';
+import { SelectOption } from 'shared/types/select';
 import Dropdown from './Dropdown';
 import {
   SelectArrow,

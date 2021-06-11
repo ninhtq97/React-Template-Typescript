@@ -18,3 +18,5 @@ export const RowHeader = styled(RowElement)``;
 export const RowBody = styled(RowElement)``;
 export const CellHeader = styled.th``;
 export const CellBody = styled.td``;
+
+export const FormElement = styled.form``;

@@ -1,8 +1,8 @@
 import { PlusOutline } from '@styled-icons/evaicons-outline';
 import { FC, useRef, useState } from 'react';
-import { SelectOption, SelectVariant } from 'shared/@types/select';
 import { KeyCodes } from 'shared/constants/keyCode';
 import useOnOutsideClick from 'shared/hooks/onOutsideClick';
+import { SelectOption, SelectVariant } from 'shared/types/select';
 import Icon from '../Icon';
 // import useOnOutsideClick from 'shared/hooks/onOutsideClick';
 import Dropdown from './Dropdown';

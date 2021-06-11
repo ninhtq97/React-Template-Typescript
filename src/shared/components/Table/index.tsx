@@ -1,6 +1,6 @@
 import { FC } from 'react';
-import { Metadata } from 'shared/@types/pagination';
 import Pagination from 'shared/components/Pagination';
+import { Metadata } from 'shared/types/pagination';
 import PlaceholderLoading from '../Loading/Placeholder';
 import {
   Cell,

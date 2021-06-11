@@ -1,6 +1,6 @@
 import { forwardRef, ReactNode } from 'react';
-import { Variant } from 'shared/@types/common';
 import color from 'shared/styles/color';
+import { Variant } from 'shared/types/common';
 import { StyledButton, StyledSpinner, Text } from './Styles';
 
 type Props = {

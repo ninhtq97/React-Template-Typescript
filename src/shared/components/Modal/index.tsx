@@ -8,9 +8,9 @@ import React, {
   useState,
 } from 'react';
 import ReactDOM from 'react-dom';
-import { ModalVariant } from 'shared/@types/modal';
 import useOnEscapeKeyDown from 'shared/hooks/onEscapeKeyDown';
 import useOnOutsideClick from 'shared/hooks/onOutsideClick';
+import { ModalVariant } from 'shared/types/modal';
 import {
   ClickableOverlay,
   CloseIcon,

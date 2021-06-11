@@ -1,9 +1,5 @@
 import { SearchOutline } from '@styled-icons/evaicons-outline';
 import { Fragment, useState } from 'react';
-import {
-  ModalRenderContentProps,
-  ModalRenderLinkProps,
-} from 'shared/@types/modal';
 import Button from 'shared/components/Button';
 import Input from 'shared/components/Input';
 import InputDebounce from 'shared/components/Input/Debounce';
@@ -11,11 +7,11 @@ import Select from 'shared/components/Select';
 import SelectTrial from 'shared/components/SelectTrial';
 import 'shared/styles/font.css';
 import GlobalStyles from 'shared/styles/global';
+import {
+  ModalRenderContentProps,
+  ModalRenderLinkProps,
+} from 'shared/types/modal';
 import Modal from '../shared/components/Modal';
-
-enum DefaultStatus {
-  ALL = 'all',
-}
 
 enum CommonStatus {
   CANCEL = 'cancel',
@@ -26,7 +22,6 @@ enum CommonStatus {
 }
 
 const CommonStatusView = {
-  [DefaultStatus.ALL]: 'Tất cả',
   [CommonStatus.CANCEL]: 'Hủy',
   [CommonStatus.PAUSE]: 'Tạm dừng',
   [CommonStatus.WAITING]: 'Đang chờ',

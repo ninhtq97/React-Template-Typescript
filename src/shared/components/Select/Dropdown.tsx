@@ -8,8 +8,8 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { SelectOption } from 'shared/@types/select';
 import { KeyCodes } from 'shared/constants/keyCode';
+import { SelectOption } from 'shared/types/select';
 import Icon from '../Icon';
 import {
   ClearIcon,
