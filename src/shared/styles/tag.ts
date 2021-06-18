@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
+export const H4Element = styled.h4``;
+export const TitleElement = styled(H4Element)``;
 export const TextElement = styled.p``;
 export const SubTextElement = styled.span``;
 

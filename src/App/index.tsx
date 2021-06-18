@@ -5,6 +5,7 @@ import Input from 'shared/components/Input';
 import InputDebounce from 'shared/components/Input/Debounce';
 import Select from 'shared/components/Select';
 import SelectTrial from 'shared/components/SelectTrial';
+import Tooltip from 'shared/components/Tooltip';
 import 'shared/styles/font.css';
 import GlobalStyles from 'shared/styles/global';
 import {
@@ -113,6 +114,10 @@ function App() {
           placeholder="Input debounce"
         />
       </div>
+
+      <Tooltip title="Add" placement="bottom">
+        <Button>Button Tooltip</Button>
+      </Tooltip>
     </Fragment>
   );
 }

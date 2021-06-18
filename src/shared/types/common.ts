@@ -9,3 +9,14 @@ export type Variant =
 export type InputIconPlacement = 'left' | 'right';
 
 export type Placement = 'top' | 'bottom' | InputIconPlacement;
+
+export type TooltipPlacement =
+  | 'topLeft'
+  | 'topRight'
+  | 'leftTop'
+  | 'leftBottom'
+  | 'rightTop'
+  | 'rightBottom'
+  | 'bottomLeft'
+  | 'bottomRight'
+  | Placement;

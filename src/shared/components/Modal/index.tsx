@@ -1,13 +1,6 @@
 import { CloseOutline } from '@styled-icons/evaicons-outline';
-import React, {
-  FC,
-  Fragment,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
-import ReactDOM from 'react-dom';
+import { FC, Fragment, useCallback, useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import useOnEscapeKeyDown from 'shared/hooks/onEscapeKeyDown';
 import useOnOutsideClick from 'shared/hooks/onOutsideClick';
 import { ModalVariant } from 'shared/types/modal';
@@ -70,7 +63,7 @@ const Modal: FC<Props> = ({
       {!isControlled && renderLink({ open: () => setStateOpen(true) })}
 
       {isOpen &&
-        ReactDOM.createPortal(
+        createPortal(
           <ScrollOverlay>
             <ClickableOverlay variant={variant} ref={$clickableOverlayRef}>
               <StyledModal
