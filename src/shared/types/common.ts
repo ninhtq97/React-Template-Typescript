@@ -10,7 +10,7 @@ export type InputIconPlacement = 'left' | 'right';
 
 export type Placement = 'top' | 'bottom' | InputIconPlacement;
 
-export type TooltipPlacement =
+export type FullPlacement =
   | 'topLeft'
   | 'topRight'
   | 'leftTop'

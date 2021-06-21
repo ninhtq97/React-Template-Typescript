@@ -115,7 +115,7 @@ function App() {
         />
       </div>
 
-      <Tooltip title="Add" placement="bottom">
+      <Tooltip title="Add">
         <Button>Button Tooltip</Button>
       </Tooltip>
     </Fragment>
