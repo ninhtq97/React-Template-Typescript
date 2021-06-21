@@ -39,7 +39,11 @@ const Tooltip: FC<Props> = ({ title, placement = 'bottom', children }) => {
   }, [isOpen, placement]);
 
   return (
-    <StyledTooltip onMouseEnter={openTooltip} onMouseLeave={closeTooltip}>
+    <StyledTooltip
+      onMouseEnter={openTooltip}
+      onMouseLeave={closeTooltip}
+      onBlur={closeTooltip}
+    >
       <TooltipLink ref={$linkRef}>{children}</TooltipLink>
 
       {isOpen &&
